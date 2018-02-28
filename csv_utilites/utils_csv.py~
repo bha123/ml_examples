@@ -1,9 +1,9 @@
 import csv
 import os
-
+import shutil
 
 # Function to read csv file and return the elements 
-#in list
+# in list
 def read_csv(filename, file_permission ,delimiter):
     
     read_list = []
@@ -54,10 +54,19 @@ def create_file(file_list, output_dir=os.getcwd(), output_dir_name="output"):
     return file_dir
 
 
-#Copy files into the folders present in the list
+# Copy files into the folders present in the list
+def copy_files_into_folders(file_dir_dict, input_file, input_file_dir = os.getcwd(), category_id = 0, item_id = 1,input_dir = 'train',output_dir = os.getcwd(), output_dir_name="output", file_permission = 'rb', delimiter = ' '):
+    # Extract filenames from file
+    print file_dir_dict
+    list_items =  read_csv(input_file, file_permission, delimiter)
+    
+    for item in list_items:
+        # extract filepath for given category
+        output_path = file_dir_dict[item[0]]
+        input_file_path = os.path.join(input_file_dir,item[1])
+        print input_file_path 
 
-def copy_files_into_folders(file_dir, file_name, output_dir = os.getcwd(), output_dir_name="output"):
-    #Extract base path
+
     
     
 
