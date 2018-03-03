@@ -3,7 +3,9 @@ import os
 import shutil
 
 # Function to read csv file and return the elements 
-# in list
+# in list 
+# Parameters:
+# filename:
 def read_csv(filename, file_permission ,delimiter):
     
     read_list = []
@@ -68,11 +70,63 @@ def copy_files_into_folders(file_dir_dict, input_file, input_file_dir = os.getcw
         #copying file from source to destination
         shutil.copy2(input_file_path, output_path)
 
+#move folders from source to dest
+def move_files(source_path, dest_path, file_name = 'NA'):
+    if not os.path.exists(dest_path):
+        os.makedirs(dest_path)
+        if file_name != 'NA':
+            shutil.move(source_path, os.path.join(dest_path, file_name))
+        else:
+            shutil.move(source_path, dest_path)
+    return 0
 
+
+#Split dataset for Evaluation, Testing and Training
+
+def split_dataset( list_of_categories, file_dir_dict, train_percentage = 60, test_percentage = 20, evaluation_percentage = 20 , test_folder = os.getcwd()+ '/test',eval_folder = os.getcwd()+'/eval' ,train_folder= os.getcwd()+'/output'):
     
+    print "Hello split_datazset"
+
+    #Get the list of files inside a folder 
+    for categorie in list_of_categories:
+        categorie_path = file_dir_dict[categorie]
+        
+        # Get the number of files
+        list_of_files = os.listdir(categorie_path)
+
+        size_of_array = len(list_of_files)
+        print size_of_array
+        
+        # find out the array value proportinate to the percentage
+        if (train_percentage + test_percentage + evaluation_percentage != 100):
+            print ("percentage values not matching to 100" )
+            return 1
+        else:
+
+            test_percentage_value = int((test_percentage/100.0)*(size_of_array))
+            
+            print test_percentage_value
+            if evaluation_percentage != 0:
+                evaluation_percentage_value = int((evaluation_percentage/100.0) *(size_of_array))
+                
+            if test_percentage_value != 0:            
+                #Extract the sub list
+                eval_list = []
+                test_list = []
+                test_list = list_of_files[0:test_percentage_value ]
+                if evaluation_percentage_value != 0: 
+                    eval_list = list_of_files[test_percentage_value: (evaluation_percentage_value + test_percentage_value)]
+                
+                # move the files of test folder
+                for i in test_list:
+                    print os.path.join(test_folder,categorie, i)
+                    move_files(os.path.join(categorie_path,i), os.path.join(test_folder,categorie))
     
-
-
+                # move the files of eval folder
+               
+                for i in eval_list:
+                    print os.path.join(eval_folder,categorie, i)
+                    move_files(os.path.join(categorie_path,i), os.path.join(eval_folder,categorie))
 
 
         
